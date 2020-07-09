@@ -1,5 +1,5 @@
 {
-  "name": "bexio-integration",
+  "name": "bexio-authorization-code-flow-example",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
