@@ -6,6 +6,7 @@ let { Issuer, generators } = require('openid-client');
 
 const CLIENT_ID = process.env.CLIENT_ID;
 const CLIENT_SECRET = process.env.CLIENT_SECRET;
+const REDIRECT_URL = process.env.REDIRECT_URL;
 
 const code_verifier = generators.codeVerifier();
 const code_challenge = generators.codeChallenge(code_verifier);
@@ -20,9 +21,7 @@ app.set('view engine', 'pug');
     client = new issuer.Client({
         client_id: CLIENT_ID,
         client_secret: CLIENT_SECRET,
-        redirect_uris: ['http://localhost:3000/bexio-redirect'],
-        post_logout_redirect_uris: ['http://localhost:3000/logout/callback'],
-        token_endpoint_auth_method: 'client_secret_post'
+        redirect_uris: [REDIRECT_URL]
     });
 })();
 

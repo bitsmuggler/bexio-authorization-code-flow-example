@@ -13,6 +13,7 @@ To make the example executable, the following environment variables must be fill
 
 * CLIENT_ID of the registered Bexio App
 * CLIENT_SECRET of the registered Bexio App
+* Configured REDIRECT_URL of the registered Bexio App
 
 ## Run the example
 
