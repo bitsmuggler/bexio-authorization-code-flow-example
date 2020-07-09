@@ -9,20 +9,23 @@ const CLIENT_SECRET = process.env.CLIENT_SECRET;
 
 const code_verifier = generators.codeVerifier();
 const code_challenge = generators.codeChallenge(code_verifier);
-let client = null;
 
 const app = express();
 app.set('view engine', 'pug');
 
-Issuer.discover('https://idp.bexio.com').then(iss => {
-    client = new iss.Client({
+
+(async () => {
+    let issuer = await Issuer.discover('https://idp.bexio.com');
+
+    client = new issuer.Client({
         client_id: CLIENT_ID,
         client_secret: CLIENT_SECRET,
         redirect_uris: ['http://localhost:3000/bexio-redirect'],
         post_logout_redirect_uris: ['http://localhost:3000/logout/callback'],
         token_endpoint_auth_method: 'client_secret_post'
     });
-});
+})();
+
 
 app.get('/', function (req, res) {
     let url = client.authorizationUrl({
@@ -35,14 +38,17 @@ app.get('/', function (req, res) {
     res.redirect(url);
 });
 
-app.get('/bexio-redirect', function (req, res) {
+app.get('/bexio-redirect', async (req, res) => {
     const params = client.callbackParams(req);
-    client.callback('http://localhost:3000/bexio-redirect', params, { code_verifier })
-        .then(function (tokenSet) {
-            console.log('received and validated tokens %j', tokenSet);
-            console.log('validated ID Token claims %j', tokenSet.claims());
-            res.render('index', { title: 'Hey', accesstoken: tokenSet.access_token });
-        });
+
+    let tokenSet = await client.callback('http://localhost:3000/bexio-redirect', params, { code_verifier });
+
+    console.log('received and validated tokens %j', tokenSet);
+    console.log('validated ID Token claims %j', tokenSet.claims());
+
+    let userinfo = await client.userinfo(tokenSet.access_token);
+
+    res.render('index', { accesstoken: tokenSet.access_token, sub: userinfo.sub, given_name: userinfo.given_name, family_name: userinfo.family_name, locale: userinfo.locale, email: userinfo.email });
 });
 
 
