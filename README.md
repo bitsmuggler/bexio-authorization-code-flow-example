@@ -11,9 +11,9 @@ Documentation: https://docs.bexio.com/#section/Authentication/Authorization-Code
 ## Configuration
 To make the example executable, the following environment variables must be filled in a `.env` file:
 
-* CLIENT_ID of the registered Bexio App
-* CLIENT_SECRET of the registered Bexio App
-* Configured REDIRECT_URL of the registered Bexio App
+* `CLIENT_ID` of the registered Bexio App
+* `CLIENT_SECRET` of the registered Bexio App
+* Configured `REDIRECT_URL` of the registered Bexio App
 
 ## Run the example
 
